@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentOS - Learning Made Simple</title>
+    <link rel="stylesheet" href="project.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="page">
+        <div class="login-box">
+            <h1>StudentOS</h1>
+            <p>Welcome Back!</p>
+            
+            <div id="errorMsg" class="error-msg"></div>
+            
+            <input type="email" id="loginEmail" placeholder="Email" class="input-field">
+            <input type="password" id="loginPassword" placeholder="Password" class="input-field">
+            
+            <button onclick="login()" class="btn-primary">Login</button>
+            <button onclick="showSignup()" class="btn-secondary">Create Account</button>
+        </div>
+    </div>
+
+    <!-- Signup Page -->
+    <div id="signupPage" class="page" style="display: none;">
+        <div class="login-box">
+            <h1>StudentOS</h1>
+            <p>Create Your Account</p>
+            
+            <div id="signupErrorMsg" class="error-msg"></div>
+            
+            <input type="text" id="signupName" placeholder="Full Name" class="input-field">
+            <input type="email" id="signupEmail" placeholder="Email" class="input-field">
+            <input type="password" id="signupPassword" placeholder="Password" class="input-field">
+            <input type="password" id="signupConfirm" placeholder="Confirm Password" class="input-field">
+            
+            <button onclick="signup()" class="btn-primary">Sign Up</button>
+            <button onclick="showLogin()" class="btn-secondary">Back to Login</button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="page" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>StudentOS</h2>
+            <ul class="menu">
+                <li><a href="#" onclick="showPage('dashboard')" class="menu-item active" id="menu-dashboard">🏠 Dashboard</a></li>
+                <li><a href="#" onclick="showPage('courses')" class="menu-item" id="menu-courses">📚 My Courses</a></li>
+                <li><a href="#" onclick="showPage('todo')" class="menu-item" id="menu-todo">📝 To-Do List</a></li>
+                <li><a href="#" onclick="showPage('scheduler')" class="menu-item" id="menu-scheduler">📅 Scheduler</a></li>
+                <li><a href="#" onclick="showPage('quiz')" class="menu-item" id="menu-quiz">🧠 Quiz</a></li>
+                <li><a href="#" onclick="showPage('attendance')" class="menu-item" id="menu-attendance">✅ Attendance</a></li>
+                <li><a href="#" onclick="showPage('community')" class="menu-item" id="menu-community">💬 Community</a></li>
+                <li><a href="#" onclick="showPage('settings')" class="menu-item" id="menu-settings">⚙️ Settings</a></li>
+            </ul>
+            <div class="sidebar-logout-sep"></div>
+            <button onclick="logout()" class="btn-logout">🚪 Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
+                    <div class="notification-container" style="position: relative; cursor: pointer;" onclick="toggleNotifications()">
+                        <span style="font-size: 20px;">🔔</span>
+                        <span id="notifBadge" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px;">2</span>
+                        <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 30px; background: white; border: 1px solid #ddd; padding: 10px; width: 250px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 100;">
+                            <p style="border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 5px;"><strong>Notifications</strong></p>
+                            <div style="font-size: 12px; margin-bottom: 5px;">- New course added: React Mastery</div>
+                            <div style="font-size: 12px;">- Reminder: Complete your Quiz</div>
+                        </div>
+                    </div>
+                    <!-- Profile Trigger with Dropdown -->
+                    <div class="profile-trigger" id="profileTrigger">
+                        <!-- Clickable header part only -->
+                        <div class="profile-trigger-btn" onclick="toggleProfileMenu()">
+                            <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=random" class="header-avatar" alt="Avatar">
+                            <span id="userName">User</span>
+                            <span class="profile-caret">▾</span>
+                        </div>
+                        <!-- Profile Dropdown -->
+                        <div id="profileMenu" class="profile-dropdown">
+                            <div class="profile-menu-user">
+                                <img id="profileMenuAvatar" src="https://ui-avatars.com/api/?name=User&background=random" class="profile-menu-avatar" alt="Avatar">
+                                <div class="profile-menu-info">
+                                    <strong id="profileMenuName">User</strong>
+                                    <small id="profileMenuEmail">—</small>
+                                    <small id="profileMenuInstitute"></small>
+                                </div>
+                            </div>
+                            <div class="profile-menu-divider"></div>
+                            <button class="profile-menu-btn" onclick="showPage('dashboard'); closeProfileMenu()">🏠 Dashboard</button>
+                            <button class="profile-menu-btn" onclick="showPage('settings'); closeProfileMenu()">⚙️ Settings &amp; Profile</button>
+                            <button class="profile-menu-btn" onclick="showPage('courses'); closeProfileMenu()">📚 My Courses</button>
+                            <div class="profile-menu-divider"></div>
+                            <button class="profile-menu-btn profile-menu-logout" onclick="logout()">🚪 Sign Out</button>
+                        </div>
+                    </div>
+                </div><!-- /.user-info -->
+            </div><!-- /.header -->
+
+
+            <!-- Dashboard Page -->
+            <div id="page-dashboard" class="content-page">
+                <div class="welcome-box">
+                    <h2>Welcome back, <span id="welcomeName">Student</span>!</h2>
+                    <p>Here's your learning overview today</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="showPage('todo')" style="cursor: pointer;">
+                        <h3 id="dashPendingTasks">5</h3>
+                        <p>Pending Tasks</p>
+                    </div>
+                    <div class="stat-card" onclick="showPage('courses')" style="cursor: pointer;">
+                        <h3 id="dashCourses">3</h3>
+                        <p>Courses</p>
+                    </div>
+                    <div class="stat-card" onclick="showPage('attendance')" style="cursor: pointer;">
+                        <h3 id="dashAttendance">85%</h3>
+                        <p>Attendance</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>12h</h3>
+                        <p>Study Hours</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <span>✅</span>
+                            <p>Completed React Basics lesson</p>
+                            <small>2 hours ago</small>
+                        </div>
+                        <div class="activity-item">
+                            <span>🎯</span>
+                            <p>Quiz Score: 85%</p>
+                            <small>Yesterday</small>
+                        </div>
+                        <div class="activity-item">
+                            <span>📚</span>
+                            <p>Started DSA Fundamentals</p>
+                            <small>2 days ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Page -->
+            <div id="page-courses" class="content-page" style="display: none;">
+                <div class="section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0;">My Courses</h3>
+                        <button onclick="openAddCourseModal()" class="btn-primary" style="width: auto; margin: 0;">+ Add Course</button>
+                    </div>
+                    <div class="courses-grid" id="coursesList">
+                        <!-- Courses will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Add Course Modal -->
+                <div id="addCourseModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; width: 400px; max-width: 90%; animation: slideUp 0.3s ease-out;">
+                        <h3>Add New Course</h3>
+                        <input type="text" id="newCourseTitle" placeholder="Course Title" class="input-field" style="margin-top: 15px;">
+                        <input type="text" id="newCourseInstructor" placeholder="Instructor Name" class="input-field">
+                        <input type="text" id="newCourseLink" placeholder="YouTube Embed Link (Optional)" class="input-field">
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button onclick="addNewCourse()" class="btn-primary" style="margin: 0;">Add</button>
+                            <button onclick="closeAddCourseModal()" class="btn-secondary" style="margin: 0;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- To-Do Page -->
+            <div id="page-todo" class="content-page" style="display: none;">
+                <div class="section">
+                    <h3>✅ Add New Task</h3>
+                    <div class="todo-add-grid">
+                        <input type="text" id="taskInput" placeholder="What needs to be done?" class="input-field">
+                        <select id="taskPriority" class="input-field">
+                            <option value="medium">⚡ Medium Priority</option>
+                            <option value="high">🔴 High Priority</option>
+                            <option value="low">🟢 Low Priority</option>
+                        </select>
+                        <input type="date" id="taskDueDate" class="input-field">
+                        <button onclick="addTask()" class="btn-primary" style="margin:0;">Add Task</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="margin: 0;">Your Tasks</h3>
+                        <button onclick="clearCompletedTasks()" class="btn-secondary" style="width: auto; margin: 0; padding: 6px 12px; font-size: 12px;">Clear Completed</button>
+                    </div>
+                    <div class="filter-tabs">
+                        <button id="filter-all" class="filter-tab active" onclick="loadTasks('all')">All</button>
+                        <button id="filter-active" class="filter-tab" onclick="loadTasks('active')">Active</button>
+                        <button id="filter-completed" class="filter-tab" onclick="loadTasks('completed')">Completed</button>
+                    </div>
+                    <div id="taskList" class="task-list"></div>
+                </div>
+            </div>
+
+            <!-- Scheduler Page -->
+            <div id="page-scheduler" class="content-page" style="display: none;">
+                <div class="section">
+                    <h3>➕ Add New Event</h3>
+                    <div class="sched-form-grid">
+                        <input type="text" id="schedTitle" placeholder="Event title (e.g. Math Class)" class="input-field">
+                        <select id="schedDay" class="input-field">
+                            <option value="">📅 Select Day</option>
+                            <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                            <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+                        </select>
+                        <input type="time" id="schedStart" class="input-field">
+                        <input type="time" id="schedEnd" class="input-field">
+                        <div class="color-picker-wrap">
+                            <label>Color</label>
+                            <input type="color" id="schedColor" value="#4F46E5" class="color-picker-input">
+                        </div>
+                        <button onclick="addScheduleEvent()" class="btn-primary" style="margin:0;">Add Event</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>📅 Weekly Schedule</h3>
+                    <div id="weekGrid" class="week-grid"></div>
+                </div>
+            </div>
+
+            <!-- Community Page -->
+            <div id="page-community" class="content-page" style="display: none;">
+                <div class="community-composer">
+                    <div class="composer-top">
+                        <img id="communityUserAvatar" src="https://ui-avatars.com/api/?name=User&background=random" class="composer-avatar" alt="Avatar">
+                        <textarea id="newPostText" placeholder="Share something with your peers... 💬" class="composer-textarea"></textarea>
+                    </div>
+                    <div class="composer-bottom">
+                        <select id="postCategory" class="input-field category-select">
+                            <option value="general">💬 General</option>
+                            <option value="question">❓ Question</option>
+                            <option value="resource">📚 Resource</option>
+                            <option value="achievement">🏆 Achievement</option>
+                        </select>
+                        <button onclick="addPost()" class="btn-primary composer-post-btn">Post</button>
+                    </div>
+                </div>
+                <div id="communityFeed" class="community-feed"></div>
+            </div>
+
+            <!-- Learning Hub Page -->
+            <div id="page-learning-hub" class="content-page" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 id="hubCourseTitle">Course Title</h2>
+                    <button onclick="showPage('courses')" class="btn-secondary" style="width: auto;">Back to Courses</button>
+                </div>
+                
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <!-- Video Embed (Left) -->
+                    <div style="flex: 2; min-width: 300px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <h3>Video Lesson</h3>
+                        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 15px; border-radius: 8px;">
+                            <iframe id="hubVideoEmbed" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    
+                    <!-- Notes & Research (Right) -->
+                    <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 20px;">
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; display: flex; flex-direction: column;">
+                            <h3>My Notes</h3>
+                            <textarea id="hubNotes" placeholder="Type your notes here... They will be saved automatically." style="width: 100%; flex: 1; min-height: 150px; margin-top: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: none; font-family: inherit;"></textarea>
+                            <button onclick="saveCourseNotes()" class="btn-primary" style="margin-top: 10px;">Save Notes</button>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <h3>Research Topics</h3>
+                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                <input type="text" id="hubSearchInput" placeholder="Search Google..." class="input-field" style="margin: 0;">
+                                <button onclick="searchResearch()" class="btn-primary" style="width: auto; margin: 0;">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Page -->
+            <div id="page-quiz" class="content-page" style="display: none;">
+                <div id="quizStart" class="section">
+                    <h3>Select a Course to Start Quiz</h3>
+                    <div id="quizCourseList" class="quiz-course-list">
+                        <!-- Quiz courses will be loaded here -->
+                    </div>
+                </div>
+
+                <div id="quizActive" style="display: none;">
+                    <div class="quiz-header">
+                        <h3>Question <span id="questionNum">1</span> of <span id="totalQuestions">3</span></h3>
+                        <div class="timer">Time: <span id="timer">2:00</span></div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4 id="questionText">Loading...</h4>
+                        <div id="optionsList" class="options-list">
+                            <!-- Options will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="quiz-nav">
+                        <button onclick="prevQuestion()" id="prevBtn" class="btn-secondary">Previous</button>
+                        <button onclick="nextQuestion()" id="nextBtn" class="btn-primary">Next</button>
+                        <button onclick="submitQuiz()" id="submitBtn" class="btn-primary" style="display: none;">Submit Quiz</button>
+                    </div>
+                </div>
+
+                <div id="quizResult" style="display: none;">
+                    <div class="quiz-result">
+                        <h2>Quiz Complete!</h2>
+                        <div class="score-display">
+                            <h1 id="scorePercent">0%</h1>
+                            <p id="scoreText">You scored 0 out of 0</p>
+                        </div>
+                        <button onclick="resetQuiz()" class="btn-primary">Back to Quiz List</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Page -->
+            <div id="page-attendance" class="content-page" style="display: none;">
+                <div class="section">
+                    <h3>Mark Today's Attendance</h3>
+                    <div class="attendance-form">
+                        <select id="attendanceSubject" class="input-field">
+                            <option value="">Select Subject</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Data Structures">Data Structures</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Database">Database Systems</option>
+                        </select>
+                        
+                        <select id="attendanceStatus" class="input-field">
+                            <option value="present">Present</option>
+                            <option value="absent">Absent</option>
+                        </select>
+                        
+                        <button onclick="markAttendance()" class="btn-primary">Mark Attendance</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Attendance Summary</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="totalClasses">0</h3>
+                            <p>Total Classes</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="presentClasses">0</h3>
+                            <p>Present</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="attendancePercent">0%</h3>
+                            <p>Attendance Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Recent Records</h3>
+                    <div id="attendanceList" class="attendance-list">
+                        <p class="empty-msg">No records yet</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="page-settings" class="content-page" style="display: none;">
+                <div class="settings-grid" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    
+                    <!-- Profile Details -->
+                    <div class="section" style="flex: 1; min-width: 300px;">
+                        <h3>Profile Settings</h3>
+                        <div class="settings-form">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <img id="settingsAvatar" src="https://ui-avatars.com/api/?name=User&background=random" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 3px solid #4F46E5;">
+                                <div>
+                                    <label class="btn-secondary" style="padding: 5px 10px; font-size: 12px; cursor: pointer; display: inline-block; width: auto;">
+                                        Upload Pic
+                                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+                                    </label>
+                                    <p style="font-size: 12px; margin-top: 5px; color: #666;">Or choose default:</p>
+                                    <div style="display: flex; justify-content: center; gap: 5px; margin-top: 5px;">
+                                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" onclick="selectAvatar(this.src)" style="width: 30px; height: 30px; cursor: pointer; border-radius: 50%; border: 1px solid #ddd;">
+                                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" onclick="selectAvatar(this.src)" style="width: 30px; height: 30px; cursor: pointer; border-radius: 50%; border: 1px solid #ddd;">
+                                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Milo" onclick="selectAvatar(this.src)" style="width: 30px; height: 30px; cursor: pointer; border-radius: 50%; border: 1px solid #ddd;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <label>Name:</label>
+                            <input type="text" id="settingsName" class="input-field">
+                            
+                            <label>Email:</label>
+                            <input type="email" id="settingsEmail" class="input-field">
+                            
+                            <label>Institute:</label>
+                            <input type="text" id="settingsInstitute" class="input-field">
+                            
+                            <button onclick="saveSettings()" class="btn-primary">Save Profile</button>
+                        </div>
+                    </div>
+
+                    <!-- Account & Security -->
+                    <div class="section" style="flex: 1; min-width: 300px;">
+                        <h3>Account & Security</h3>
+                        <div class="settings-form">
+                            <label>Current Password:</label>
+                            <input type="password" id="currentPassword" class="input-field" placeholder="Enter current password">
+                            
+                            <label>New Password:</label>
+                            <input type="password" id="newPassword" class="input-field" placeholder="Enter new password">
+                            
+                            <button onclick="changePassword()" class="btn-primary" style="margin-bottom: 20px;">Update Password</button>
+                            
+                            <h3 style="margin-top: 20px; font-size: 18px;">Preferences</h3>
+                            <div class="preferences" style="margin-top: 15px;">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="prefNotifications" checked>
+                                    <span>Enable Push Notifications</span>
+                                </label>
+                                
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="prefEmails">
+                                    <span>Receive Weekly Reports (Email)</span>
+                                </label>
+                                
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="prefDark" onchange="toggleDarkMode()">
+                                    <span>Dark Theme (Beta)</span>
+                                </label>
+                            </div>
+                            <button onclick="savePreferences()" class="btn-secondary" style="margin-top: 20px;">Save Preferences</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="project.js"></script>
+</body>
+</html>
